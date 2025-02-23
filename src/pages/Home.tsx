@@ -19,7 +19,7 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://your-backend-url/api/auth/signin', {
+      const response = await fetch('http://localhost:3000/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
