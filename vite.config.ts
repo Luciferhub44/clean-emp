@@ -9,7 +9,6 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: true,
-    emptyOutDir: true
   },
   resolve: {
     alias: {
@@ -21,13 +20,19 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    open: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:5000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Authorization',
+        },
+      },
+    },
   },
 })
