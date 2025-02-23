@@ -14,19 +14,12 @@ interface TaskViewProps {
   onTaskUpdate?: () => void;
 }
 
-interface TaskResponse {
-  response: 'accepted' | 'rejected';
-  notes?: string;
-}
-
 export default function TaskView({ taskId, isOpen, onClose, onTaskUpdate }: TaskViewProps) {
   const [task, setTask] = useState<Task | null>(null);
   const [assignedUser, setAssignedUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showResponseModal, setShowResponseModal] = useState(false);
-  const [responseNotes, setResponseNotes] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (isOpen && taskId) {

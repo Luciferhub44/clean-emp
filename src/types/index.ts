@@ -4,6 +4,23 @@ export interface User {
   first_name: string;
   last_name: string;
   user_type: 'employee' | 'admin';
+  profile_confirmed: boolean;
+  profile_confirmed_at?: string;
+  phone?: string;
+  address?: string;
+  emergency_contact?: {
+    name: string;
+    phone: string;
+    relationship: string;
+  };
+  bank_info?: {
+    account_name: string;
+    account_number: string;
+    bank_name: string;
+    routing_number: string;
+  };
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Task {

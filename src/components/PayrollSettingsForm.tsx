@@ -1,26 +1,21 @@
 import { useState } from 'react';
-import { PayrollSettings } from '@/types';
 import ApiService from '@/services/api';
+import { usePayroll } from '@/contexts/PayrollContext';
 
 interface PayrollSettingsFormProps {
-  initialData?: PayrollSettings;
-  onSubmit: () => void;
   onCancel: () => void;
 }
 
-export default function PayrollSettingsForm({
-  initialData,
-  onSubmit,
-  onCancel,
-}: PayrollSettingsFormProps) {
+export default function PayrollSettingsForm({ onCancel }: PayrollSettingsFormProps) {
+  const { settings, refreshPayrollData } = usePayroll();
   const [formData, setFormData] = useState({
-    base_salary: initialData?.base_salary || 0,
-    commission_rate: initialData?.commission_rate || 0,
-    po_commission_rate: initialData?.po_commission_rate || 0,
-    pay_period: initialData?.pay_period || '1 month',
+    base_salary: settings?.base_salary || 0,
+    commission_rate: settings?.commission_rate || 0,
+    po_commission_rate: settings?.po_commission_rate || 0,
+    pay_period: settings?.pay_period || '1 month',
   });
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +24,8 @@ export default function PayrollSettingsForm({
 
     try {
       await ApiService.put('/admin/payroll/settings', formData);
-      onSubmit();
+      await refreshPayrollData();
+      onCancel();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update payroll settings');
     } finally {
@@ -128,7 +124,7 @@ export default function PayrollSettingsForm({
           className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50"
           disabled={isSubmitting}
         >
-          Save Settings
+          {isSubmitting ? 'Saving...' : 'Save Settings'}
         </button>
       </div>
     </form>

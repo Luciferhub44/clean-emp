@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Task, TaskComment, User, PurchaseOrder } from '@/types';
+import { Task, TaskComment, User, PurchaseOrder, PayrollSettings } from '@/types';
 import ApiService from '@/services/api';
 import PurchaseOrderStatus from './PurchaseOrderStatus';
 import { EmailService } from '@/services/emailService';
+import { calculateCommission } from '@/utils/payrollUtils';
 
 interface TaskDetailsProps {
   task: Task;
@@ -22,7 +23,6 @@ export default function TaskDetails({
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<TaskComment[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,6 +68,10 @@ export default function TaskDetails({
 
       // If task is completed, calculate and send commission notification
       if (newStatus === 'completed') {
+        // First get the current payroll settings
+        const settingsResponse = await ApiService.get<PayrollSettings>('/payroll/settings');
+        const commission = calculateCommission(task, settingsResponse.data);
+
         const commissionResponse = await ApiService.post<{
           amount: number;
           totalEarned: number;
@@ -75,6 +79,7 @@ export default function TaskDetails({
           task_id: task.id,
           employee_id: assignedUser.id,
           commission_type: task.purchase_order ? 'po_completion' : 'task_completion',
+          amount: commission,
         });
 
         // Send email notification
@@ -88,7 +93,7 @@ export default function TaskDetails({
         });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update task status');
+      console.error('Failed to update task status:', err instanceof Error ? err.message : 'Failed to update task status');
     }
   };
 
