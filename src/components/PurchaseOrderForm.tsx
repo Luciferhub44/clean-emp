@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PurchaseOrder, PurchaseOrderItem } from '@/types';
+import { PurchaseOrder } from '@/types';
 
 interface FormItem {
   description: string;
@@ -68,7 +68,7 @@ export default function PurchaseOrderForm({ onSubmit, onCancel, initialData }: P
         notes: formData.notes,
         status: 'pending',
         total_amount,
-        items: formData.items.map((item, index) => ({
+        items: formData.items.map(item => ({
           id: 0, // This will be set by the backend
           po_id: 0, // This will be set by the backend
           description: item.description,

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { User } from '@/types';
 import ApiService from '@/services/api';
 import LoadingSpinner from '@/components/LoadingSpinner';
 

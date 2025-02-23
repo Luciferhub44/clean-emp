@@ -68,7 +68,7 @@ export default function PurchaseOrderStatus({
 
       <div className="relative">
         <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200">
-          {getStatusSteps().map((step, index) => (
+          {getStatusSteps().map(step => (
             <div
               key={step.id}
               className={`shadow-none flex flex-col text-center whitespace-nowrap justify-center ${
