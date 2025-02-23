@@ -1,13 +1,27 @@
--- Create Users Table
+-- Create roles table
+CREATE TABLE roles (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create users table
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    user_type VARCHAR(50) NOT NULL CHECK (user_type IN ('employee', 'admin')),
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  role_id INTEGER REFERENCES roles(id),
+  profile_confirmed BOOLEAN DEFAULT false,
+  profile_confirmed_at TIMESTAMP,
+  phone VARCHAR(20),
+  address TEXT,
+  emergency_contact JSONB,
+  bank_info JSONB,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Tasks Table
@@ -50,5 +64,10 @@ CREATE TRIGGER update_users_updated_at
 
 CREATE TRIGGER update_tasks_updated_at
     BEFORE UPDATE ON tasks
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_roles_updated_at
+    BEFORE UPDATE ON roles
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column(); 
