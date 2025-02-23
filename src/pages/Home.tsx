@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApiService from '../services/api';
 
@@ -20,12 +20,21 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await ApiService.post<{ token: string }>('/auth/signin', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userType', formData.userType);
-      
-      // Redirect based on user type
-      navigate(formData.userType === 'admin' ? '/admin/dashboard' : '/employee/dashboard');
+      const response = await ApiService.post<{ token: string }>('/auth/login', {
+        email: formData.email,
+        password: formData.password,
+        user_type: formData.userType
+      });
+
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userType', formData.userType);
+        
+        // Redirect based on user type
+        navigate(formData.userType === 'admin' ? '/admin/dashboard' : '/employee/dashboard');
+      } else {
+        setError('Invalid response from server');
+      }
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }

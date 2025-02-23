@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api';  // Changed to use relative path for proxy
+const API_BASE_URL = '/api';  // Using relative path for proxy
 
 interface ApiResponse<T> {
   data: T;
@@ -35,7 +35,16 @@ class ApiService {
     });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // Handle different status codes
+      if (response.status === 404) {
+        throw new Error('API endpoint not found');
+      }
+      if (response.status === 304) {
+        throw new Error('No changes were made');
+      }
+      
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'An error occurred');
     }
     
     return response.json();
