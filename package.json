@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "node server/index.js",
-    "postinstall": "npm run build",
+    "postinstall": "npm install --production=false && npm run build",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/vite": "^4.0.8",
     "@testing-library/react": "^14.1.2",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
@@ -29,16 +28,16 @@
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.2.0",
+    "react-router-dom": "^6.22.1",
     "serve-static": "^1.15.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@testing-library/jest-dom": "^6.1.4",
     "@types/jest": "^29.5.8",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "@vitejs/plugin-react-swc": "^3.8.0",
+    "@types/react": "^18.2.57",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.0.0",
