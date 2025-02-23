@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ApiService from '../services/api';
 
 interface SignInForm {
   email: string;
@@ -19,18 +20,8 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error('Invalid credentials');
-
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
+      const response = await ApiService.post<{ token: string }>('/auth/signin', formData);
+      localStorage.setItem('token', response.data.token);
       localStorage.setItem('userType', formData.userType);
       
       // Redirect based on user type
