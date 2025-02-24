@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "node server/index.js",
     "postinstall": "npm run build",
-    "build": "tsc -b && vite build",
+    "build": "npm install @vitejs/plugin-react-swc && tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
