@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApiService from '../services/api';
 
 interface SignInForm {
   email: string;
@@ -20,21 +19,22 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await ApiService.post<{ token: string }>('/auth/login', {
-        email: formData.email,
-        password: formData.password,
-        user_type: formData.userType
+      const response = await fetch('https://your-backend-url/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
-      if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('userType', formData.userType);
-        
-        // Redirect based on user type
-        navigate(formData.userType === 'admin' ? '/admin/dashboard' : '/employee/dashboard');
-      } else {
-        setError('Invalid response from server');
-      }
+      if (!response.ok) throw new Error('Invalid credentials');
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userType', formData.userType);
+      
+      // Redirect based on user type
+      navigate(formData.userType === 'admin' ? '/admin/dashboard' : '/employee/dashboard');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
