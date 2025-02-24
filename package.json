@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "node server/index.js",
-    "postinstall": "npm run build",
-    "build": "npm install @vitejs/plugin-react-swc && tsc && vite build",
+    "build": "tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
@@ -38,6 +37,7 @@
     "@types/jest": "^29.5.8",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.19.0",
