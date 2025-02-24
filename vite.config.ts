@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
+    sourcemap: true,
     minify: true,
   },
   resolve: {
@@ -21,6 +21,8 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    host: true,
+    allowedHosts: ['all'],
     proxy: {
       '/api': {
         target: 'http://localhost:5432',
